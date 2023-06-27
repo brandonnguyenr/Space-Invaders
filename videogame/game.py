@@ -1,13 +1,14 @@
+# Brandon Nguyen
+# nguyen.bradon771@csu.fullerton.edu
+# @brandonnguyenr
+# 6-27-2023
+
 """Game objects to create PyGame based games."""
 
-import os
 import warnings
-
 import pygame
-
 import rgbcolors
-from scene import PolygonTitleScene
-
+import scene
 
 def display_info():
     """Print out information about the display driver and video information."""
@@ -27,9 +28,9 @@ class VideoGame:
 
     def __init__(
         self,
-        window_width=800,
-        window_height=800,
-        window_title="My Awesome Game",
+        window_width=600,
+        window_height=600,
+        window_title="Space Invaders",
     ):
         """Initialize a new game with the given window size and window title."""
         pygame.init()
@@ -59,34 +60,44 @@ class VideoGame:
         raise NotImplementedError
 
 
-class MyVideoGame(VideoGame):
+class MultiSceneDemo(VideoGame):
     """Show a colored window with a colored message and a polygon."""
 
     def __init__(self):
         """Init the Pygame demo."""
-        # TODO: initialize the window and set the title to "Hello"
-        super().__init__()
-        # TODO: Define an instance variable named self._main_dir which is the absolute path to the parent directory of this file, __file__.
-        # TODO: Define an instance variable named self._data_dir which is self._main_dir joined with "data".
-        # TODO: build the game's scene graph
-        self._main_dir = None
-        self._data_dir = None
-        # print(f"Our main directory is {self._main_dir}")
-        # print(f"Our data directory is {self._data_dir}")
+        super().__init__(window_title="Space Invaders")
+        self._scene_graph = scene.SceneManager()
+        self.build_scene_graph()
 
     def build_scene_graph(self):
         """Build scene graph for the game demo."""
-        # TODO: implement how the scene graph for this game is built.
-        raise NotImplementedError
+        self._scene_graph.add(
+            [
+                scene.BlinkingTitle(
+                    self._screen,
+                    self._scene_graph,
+                    "Space Invaders",
+                    rgbcolors.orange,
+                    72,
+                    rgbcolors.black,
+                ),
+                scene.RedCircleScene(self._screen, self._scene_graph),
+                scene.GreenCircleScene(self._screen, self._scene_graph),
+                scene.BlueCircleScene(self._screen, self._scene_graph),
+            ]
+        )
+        self._scene_graph.set_next_scene('0')
 
     def run(self):
         """Run the game; the main game loop."""
         scene_iterator = iter(self.scene_graph)
+        current_scene = next(scene_iterator)
         while not self._game_is_over:
-            current_scene = next(scene_iterator)
             current_scene.start_scene()
             while current_scene.is_valid():
-                self._clock.tick(current_scene.frame_rate())
+                current_scene.delta_time = self._clock.tick(
+                    current_scene.frame_rate()
+                )
                 for event in pygame.event.get():
                     current_scene.process_event(event)
                 current_scene.update_scene()
@@ -94,6 +105,9 @@ class MyVideoGame(VideoGame):
                 current_scene.render_updates()
                 pygame.display.update()
             current_scene.end_scene()
-            self._game_is_over = True
+            try:
+                current_scene = next(scene_iterator)
+            except StopIteration:
+                self._game_is_over = True
         pygame.quit()
         return 0
