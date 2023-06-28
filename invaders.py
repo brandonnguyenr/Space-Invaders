@@ -13,4 +13,4 @@ import game
 
 if __name__ == "__main__":
     # TODO: Prepare and run the game
-    sys.exit(game.MultiSceneDemo().run())
+    sys.exit(game.SpaceInvaders().run())

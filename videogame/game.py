@@ -60,7 +60,7 @@ class VideoGame:
         raise NotImplementedError
 
 
-class MultiSceneDemo(VideoGame):
+class SpaceInvaders(VideoGame):
     """Show a colored window with a colored message and a polygon."""
 
     def __init__(self):
@@ -71,6 +71,7 @@ class MultiSceneDemo(VideoGame):
 
     def build_scene_graph(self):
         """Build scene graph for the game demo."""
+        background_image = pygame.image.load("videogame/data/photo-1534796636912-3b95b3ab5986.jpeg").convert()
         self._scene_graph.add(
             [
                 scene.BlinkingTitle(
@@ -79,7 +80,7 @@ class MultiSceneDemo(VideoGame):
                     "Space Invaders",
                     rgbcolors.orange,
                     72,
-                    rgbcolors.black,
+                    background_image,
                 ),
                 scene.RedCircleScene(self._screen, self._scene_graph),
                 scene.GreenCircleScene(self._screen, self._scene_graph),

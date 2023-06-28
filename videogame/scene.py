@@ -51,8 +51,8 @@ class Scene:
     def __init__(self, screen, background_color, soundtrack=None):
         """Scene initializer"""
         self._screen = screen
-        self._background = pygame.Surface(self._screen.get_size())
-        self._background.fill(background_color)
+        #https://unsplash.com/images/nature/space : website used to grab this background - 6-27-2023
+        self._background = pygame.image.load("videogame/data/photo-1534796636912-3b95b3ab5986.jpeg").convert()
         self._frame_rate = 60
         self._is_valid = True
         self._soundtrack = soundtrack
@@ -248,19 +248,20 @@ class BlinkingTitle(PressAnyKeyToExitScene):
 
     def draw(self):
         super().draw()
+        #https://www.1001fonts.com/ : is where the font was aquired - 6-27-2023
         presskey_font = pygame.font.Font(
-            pygame.font.get_default_font(), self._size
+            "videogame/data/ARCADECLASSIC.TTF", self._size
         )
         presskey = presskey_font.render(
             self._message, True, self._interpolate()
         )
         (w, h) = self._screen.get_size()
-        presskey_pos = presskey.get_rect(center=(w / 2, h / 2))
+        presskey_pos = presskey.get_rect(center=(w / 2, h / 2 - 100))
         press_any_key_font = pygame.font.Font(
-            pygame.font.get_default_font(), 18
+            "videogame/data/ARCADECLASSIC.TTF", 15
         )
         press_any_key = press_any_key_font.render(
-            'Press any key.', True, rgbcolors.black
+            'Press  any  key  to  continue', True, rgbcolors.white
         )
         (w, h) = self._screen.get_size()
         press_any_key_pos = press_any_key.get_rect(center=(w / 2, h - 50))
