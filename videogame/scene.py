@@ -8,6 +8,7 @@ import os
 import pygame
 import rgbcolors
 from player import Player
+import obstacle
 
 
 # If you're interested in using abstract base classes, feel free to rewrite
@@ -119,7 +120,28 @@ class BattleScene(Scene):
         (w, h) = self._screen.get_size()
         player_sprite = Player((w / 2, h), w, 5)
         self.player = pygame.sprite.GroupSingle(player_sprite)
+
+        self.shape = obstacle.shape
+        self.shield_size = 6
+        self.shields = pygame.sprite.Group()
+        self.obstacle_num = 4
+        self.obstacle_x_pos = [num * (w / self.obstacle_num) for num in range(self.obstacle_num)]
+        self.create_multi_obs(*self.obstacle_x_pos, x_start = w / 15, y_start = 480)
+
         self._next_key = '1'
+
+    def create_obstacle(self, x_start, y_start, offset_x):
+        for row_index, row in enumerate(self.shape):
+            for col_index, col in enumerate(row):
+                if col == 'x':
+                    x = x_start + col_index * self.shield_size + offset_x
+                    y = y_start + row_index * self.shield_size
+                    shield = obstacle.Shield(self.shield_size, rgbcolors.red, x, y)
+                    self.shields.add(shield)
+
+    def create_multi_obs(self, *offset, x_start, y_start):
+        for offset_x in offset:
+            self.create_obstacle(x_start, y_start, offset_x)
 
     def start_scene(self):
         super().start_scene()
@@ -134,6 +156,7 @@ class BattleScene(Scene):
         super().draw()
         self.player.draw(self._screen)
         self.player.sprite.lasers.draw(self._screen)
+        self.shields.draw(self._screen)
 
 class Title(PressAnyKeyToExitScene):
     """A scene with blinking text."""

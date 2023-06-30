@@ -2,7 +2,7 @@
 # nguyen.bradon771@csu.fullerton.edu
 # @brandonnguyenr
 
-"""Player class to crete a player."""
+"""Player class to create a player."""
 
 import pygame
 from laser import Laser
