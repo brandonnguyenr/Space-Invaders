@@ -1,7 +1,6 @@
 # Brandon Nguyen
 # nguyen.bradon771@csu.fullerton.edu
 # @brandonnguyenr
-# 6-27-2023
 
 """Game objects to create PyGame based games."""
 

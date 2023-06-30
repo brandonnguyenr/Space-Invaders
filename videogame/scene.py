@@ -1,7 +1,6 @@
 # Brandon Nguyen
 # nguyen.bradon771@csu.fullerton.edu
 # @brandonnguyenr
-# 6-27-2023
 
 """Scene objects for making games with PyGame."""
 
@@ -134,6 +133,7 @@ class BattleScene(Scene):
     def draw(self):
         super().draw()
         self.player.draw(self._screen)
+        self.player.sprite.lasers.draw(self._screen)
 
 class Title(PressAnyKeyToExitScene):
     """A scene with blinking text."""
