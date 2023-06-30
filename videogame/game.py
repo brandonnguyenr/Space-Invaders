@@ -74,7 +74,7 @@ class SpaceInvaders(VideoGame):
         background_image = pygame.image.load("videogame/data/photo-1534796636912-3b95b3ab5986.jpeg").convert()
         self._scene_graph.add(
             [
-                scene.BlinkingTitle(
+                scene.Title(
                     self._screen,
                     self._scene_graph,
                     "Space Invaders",
@@ -82,9 +82,7 @@ class SpaceInvaders(VideoGame):
                     72,
                     background_image,
                 ),
-                scene.RedCircleScene(self._screen, self._scene_graph),
-                scene.GreenCircleScene(self._screen, self._scene_graph),
-                scene.BlueCircleScene(self._screen, self._scene_graph),
+            scene.BattleScene(self._screen, background_image),
             ]
         )
         self._scene_graph.set_next_scene('0')

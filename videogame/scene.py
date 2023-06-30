@@ -6,9 +6,9 @@
 """Scene objects for making games with PyGame."""
 
 import os
-import random
 import pygame
 import rgbcolors
+from player import Player
 
 
 # If you're interested in using abstract base classes, feel free to rewrite
@@ -114,107 +114,28 @@ class PressAnyKeyToExitScene(Scene):
         if event.type == pygame.KEYDOWN:
             self._is_valid = False
 
+class BattleScene(Scene):
+    def __init__(self, screen, background_color):
+        super().__init__(screen, background_color)
+        (w, h) = self._screen.get_size()
+        player_sprite = Player((w / 2, h))
+        self.player = pygame.sprite.GroupSingle(player_sprite)
+        self._next_key = '1'
 
-class Circle:
-    """Class representing a circle with a bounding rect."""
-
-    def __init__(self, center, radius, color, name="None"):
-        self._center = pygame.math.Vector2(center)
-        self._radius = radius
-        self._color = color
-        self._name = name
-        self._is_exploding = False
-
-    @property
-    def radius(self):
-        """Return the circle's radius"""
-        return self._radius
-
-    @property
-    def center(self):
-        """Return the circle's center."""
-        return self._center
-
-    @property
-    def rect(self):
-        """Return bounding rect."""
-        left = self._center.x - self._radius
-        top = self._center.y - self._radius
-        width = 2 * self._radius
-        return pygame.Rect(left, top, width, width)
-
-    @property
-    def width(self):
-        """Return the width of the bounding box the circle is in."""
-        return 2 * self._radius
-
-    @property
-    def height(self):
-        """Return the height of the bounding box the circle is in."""
-        return 2 * self._radius
-
-    @property
-    def is_exploding(self):
-        return self._is_exploding
-
-    @is_exploding.setter
-    def is_exploding(self, val):
-        self._is_exploding = val
-
-    def draw(self, screen):
-        """Draw the circle to screen."""
-        pygame.draw.circle(screen, self._color, self.center, self.radius)
-
-    def __repr__(self):
-        """Circle stringify."""
-        return f'Circle({self._center}, {self._radius}, {self._color}, "{self._name}")'
-
-
-class CircleScene(PressAnyKeyToExitScene):
-    def __init__(self, screen, scene_manager, color):
-        super().__init__(screen, rgbcolors.black)
-        self._scene_manager = scene_manager
-        (width, height) = self._screen.get_size()
-        self._circle = Circle(pygame.math.Vector2(width // 2, height // 2), 200, color, name=str(id(self)))
-        self._next_key = '0'
-
-    def draw(self):
-        super().draw()
-        self._circle.draw(self._screen)
+    def start_scene(self):
+        super().start_scene()
 
     def end_scene(self):
         super().end_scene()
-        self._is_valid = True
 
-    def process_event(self, event):
-        if event.type == pygame.KEYDOWN and event.key == pygame.K_x:
-            self._next_key = random.choice('0 1 2 3'.split())
-            self._scene_manager.set_next_scene(self._next_key)
-            self._is_valid = False
-        else:
-            super().process_event(event)
+    def update_scene(self):
+        self.player.update()
 
+    def draw(self):
+        super().draw()
+        self.player.draw(self._screen)
 
-# Scene 1
-class RedCircleScene(CircleScene):
-    def __init__(self, screen, scene_manager):
-        super().__init__(screen, scene_manager, rgbcolors.red)
-        self._next_key = '2'
-
-# Scene 2
-class GreenCircleScene(CircleScene):
-    def __init__(self, screen, scene_manager):
-        super().__init__(screen, scene_manager, rgbcolors.green)
-        self._next_key = '3'
-
-# Scene 3
-class BlueCircleScene(CircleScene):
-    def __init__(self, screen, scene_manager):
-        super().__init__(screen, scene_manager, rgbcolors.blue)
-        self._next_key = '1'
-
-# Scene 0
-class BlinkingTitle(PressAnyKeyToExitScene):
+class Title(PressAnyKeyToExitScene):
     """A scene with blinking text."""
 
     def __init__(
@@ -256,7 +177,7 @@ class BlinkingTitle(PressAnyKeyToExitScene):
             self._message, True, self._interpolate()
         )
         (w, h) = self._screen.get_size()
-        presskey_pos = presskey.get_rect(center=(w / 2, h / 2 - 100))
+        presskey_pos = presskey.get_rect(center=(w / 2, h / 2 - 50))
         press_any_key_font = pygame.font.Font(
             "videogame/data/ARCADECLASSIC.TTF", 15
         )
@@ -273,16 +194,7 @@ class BlinkingTitle(PressAnyKeyToExitScene):
         self._is_valid = True
 
     def process_event(self, event):
-        if event.type == pygame.KEYDOWN and event.key == pygame.K_a:
-            self._scene_manager.set_next_scene('2')
-            self._is_valid = False
-        elif event.type == pygame.KEYDOWN and event.key == pygame.K_s:
-            self._scene_manager.set_next_scene('3')
-            self._is_valid = False
-        elif event.type == pygame.KEYDOWN and event.key == pygame.K_x:
-            self._next_key = random.choice('0 1 2 3'.split())
-            self._scene_manager.set_next_scene(self._next_key)
-            self._is_valid = False
-        else:
-            super().process_event(event)
+        super().process_event(event)
+        if event.type == pygame.KEYDOWN:
+            self._scene_manager.set_next_scene('1') 
 
