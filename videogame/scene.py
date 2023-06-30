@@ -118,7 +118,7 @@ class BattleScene(Scene):
     def __init__(self, screen, background_color):
         super().__init__(screen, background_color)
         (w, h) = self._screen.get_size()
-        player_sprite = Player((w / 2, h))
+        player_sprite = Player((w / 2, h), w, 5)
         self.player = pygame.sprite.GroupSingle(player_sprite)
         self._next_key = '1'
 
