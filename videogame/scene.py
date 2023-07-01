@@ -12,6 +12,8 @@ from player import Player
 from random import choice, randint
 from laser import Laser
 import obstacle
+import pickle
+from datetime import datetime
 
 
 # If you're interested in using abstract base classes, feel free to rewrite
@@ -130,7 +132,7 @@ class BattleScene(Scene):
         player_sprite = Player((w / 2, h), w, 5)
         self.player = pygame.sprite.GroupSingle(player_sprite)
 
-        self.lives = 4
+        self.lives = 3
         self.live_surf = pygame.image.load('videogame/data/player.png').convert_alpha()
         self.live_x_start_pos = w - self.live_surf.get_size()[0] * 2 - 90
         self.score = 0
@@ -296,9 +298,25 @@ class BattleScene(Scene):
         super().end_scene()
         pygame.mixer.music.stop()
 
+        scores = {'score': self.score, 'date': datetime.now()}
+        with open('scores.pickle', 'wb') as f:
+            pickle.dump(scores, f)
+
     def update_scene(self):
         """Update Scene."""
         self.player.update()
+
+        if len(self.aliens) == 0:
+            self.end_game()
+
+    def end_game(self):
+        """End the game and exit."""
+        scores = {'score': self.score, 'date': datetime.now()}
+        with open('scores.pickle', 'wb') as f:
+            pickle.dump(scores, f)
+            
+        pygame.quit()
+        sys.exit()
 
     def draw(self):
         """Draw everything included."""
