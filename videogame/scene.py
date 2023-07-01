@@ -95,7 +95,7 @@ class Scene:
         """Start the scene."""
         if self._soundtrack:
             try:
-                pygame.mixer.music.load(self._soundtrack)
+                pygame.mixer.music.load('videogame/data/Visager_-_15_-_Epilogue.mp3')
                 pygame.mixer.music.set_volume(0.5)
             except pygame.error as pygame_error:
                 print("\n".join(pygame_error.args))
@@ -375,6 +375,14 @@ class Title(PressAnyKeyToExitScene):
         press_any_key_pos = press_any_key.get_rect(center=(w / 2, h - 50))
         self._screen.blit(presskey, presskey_pos)
         self._screen.blit(press_any_key, press_any_key_pos)
+
+    def start_scene(self):
+        """Start scene."""
+        super().start_scene()
+
+    def end_scene(self):
+        """End Scene."""
+        super().end_scene()
 
     def end_scene(self):
         """End the scene."""
