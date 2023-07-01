@@ -109,3 +109,4 @@ class SpaceInvaders(VideoGame):
                 self._game_is_over = True
         pygame.quit()
         return 0
+    
